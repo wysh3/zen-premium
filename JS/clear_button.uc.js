@@ -49,7 +49,7 @@ function apply_clear_button() {
 
 	#browser:not(:has(#navigator-toolbox[zen-expanded="true"])) {
 		#tabbrowser-tabs:hover > #vertical-pinned-tabs-container-separator {
-			width: calc(100% - 43px) !important;
+			width: calc(100% - 50px) !important;
 		}
 	}
 
