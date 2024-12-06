@@ -1,0 +1,225 @@
+@-moz-document url(about:privatebrowsing) {
+
+@media not (prefers-contrast) {
+html.private {
+  --in-content-page-background: unset !important;
+}
+}
+
+:root:not(.system-font-size) {
+    --newtab-background-color-secondary: transparent !important;
+    --newtab-element-hover-color: var(--button-active-bgcolor) !important;
+    --newtab-element-secondary-hover-color: var(--general-color) !important;
+    --newtab-element-secondary-active-color: var(--button-active-bgcolor) !important;
+    --newtab-border-color: color-mix(in srgb, var(--newtab-background-color) 88%, var(--newtab-wordmark-color)) !important;
+    --newtab-primary-element-text-color: var(--newtab-text-primary-color) !important;
+    background-image: var(--image-back) !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-color: unset !important;
+    padding: unset !important;
+  }
+  
+.search-inner-wrapper .search-handoff-button {
+    display: flex !important;
+    outline: none !important;
+    filter: saturate(140%) !important;
+    background-color: var(--new-color) !important;   
+    border-radius: 17px !important;
+    padding: 0.4rem;
+    position: relative;
+    box-shadow: 0 10px 15px rgb(0 0 0 / 20%) !important;  
+    backdrop-filter: blur(33px);
+    background-blend-mode: overlay;
+    border: none !important;
+}
+
+.search-inner-wrapper .search-handoff-button:is(:hover, :focus, :active, :focus-within, :visited, :focus-visible, :target){
+outline: none !important;
+border: none !important;
+}
+
+.search-handoff-button, .search-handoff-button:active, .search-handoff-button:enabled:hover:active {
+fill: var(--theme-color) !important;
+}
+
+body {
+  --newtab-search-icon: url("chrome://global/skin/icons/search-glass.svg") !important;
+}
+
+.fake-textbox {
+  color: var(--theme-color) !important;
+  opacity: 0.54;
+  text-align: center !important;
+}
+.search-handoff-button .fake-textbox { 
+text-align: center !important;
+padding-inline-start: 0px !important;
+align-content: center !important;
+margin: auto !important;
+}
+
+@media (min-width: 764px) {
+  .search-inner-wrapper {
+    min-width: auto !important;
+  }
+}
+
+  .search-inner-wrapper {
+    min-width: auto !important;
+  }
+
+
+.logo-and-wordmark {
+visibility: hidden !important;
+margin-bottom: -100px !important;
+}
+
+
+.info {
+    background-color: var(--new-color)  !important;   
+    border-radius: 15px !important;
+    padding: 0.4rem;
+    position: relative;
+    backdrop-filter: blur(33px);
+    font-family: -apple-system !important;
+    font-weight: normal !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+    background-image: var(--icon-theme) !important;
+}
+
+.info p {
+  text-align: center !important;
+  opacity: 80% !important;
+  color: var(--theme-color) !important;
+}
+
+a:link, .text-link {
+  color: color-mix(in srgb, var(--theme-color) 69%, transparent) !important;
+  text-decoration: unset !important;
+  transition: all 0.1s !important;
+  position: fixed !important;
+  right: 25px !important;
+  bottom: 12px !important;
+}
+
+a:link:hover {
+  color: var(--theme-color) !important;
+  text-decoration: unset !important;
+}
+
+.fake-caret {
+ background-color: color-mix(in srgb, var(--theme-color) 60%, transparent) !important;
+}
+
+.promo.below-search {
+    background-color: var(--new-color)  !important;   
+    border-radius: 15px !important;
+    padding: 0.4rem;
+    position: relative;
+    backdrop-filter: blur(33px);
+    font-family: -apple-system !important;
+    font-weight: normal !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+}
+
+.promo.below-search {
+  #promo-header {
+    margin-block: 0 1em;
+    color: var(--theme-color) !important;
+    opacity: 100% !important;
+  }
+}
+
+.promo.below-search {
+  #private-browsing-promo-text {
+    color: var(--theme-color) !important;
+    opacity: 80% !important;
+  }
+}
+
+
+.promo-dismiss {
+  background: url("chrome://global/skin/icons/close-fill.svg") center no-repeat !important;
+  transition: all 0.1s !important;
+  transform: scale(1.3) !important;
+}
+
+.promo-dismiss:hover {
+fill: var(--theme-color) !important;
+opacity: 100% !important;
+}
+
+.promo.below-search {
+  #private-browsing-promo-link:not(.text-link) {
+  color: var(--theme-color) !important;
+  }
+}
+  
+  .promo.below-search:is(:hover, :focus, :active, :focus-within, :visited, :focus-visible, :target) {
+  #private-browsing-promo-link:not(.text-link) {
+  color: var(--theme-color) !important;
+  }
+}
+
+
+@media (prefers-color-scheme: dark){
+
+.promo-cta .primary{
+    background-color: #ffffff26 !important;
+    border-color: transparent !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0px 15px rgb(0 0 0 / 15%) !important;
+    transition: all 0.05s !important;
+}
+
+.promo-cta .primary:hover{
+background-color: #ffffff34 !important;
+}
+
+.promo-cta .primary:active{
+background-color: #ffffff3f !important;
+}
+
+:root{
+  --new-color: rgba(20, 25, 40, 0.6) !important;
+  --theme-color: white !important;
+  --image-back: url("./img/img.png") !important;
+  --icon-theme: url("icons/private.svg") !important;
+  }
+}
+
+@media (prefers-color-scheme: light){
+
+.promo-dismiss {
+  fill: unset !important;
+}
+
+.promo-cta .primary{
+   background-color: #ffffff7d !important;
+    border-color: transparent !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0px 15px rgb(0 0 0 / 15%) !important;
+    transition: all 0.05s !important;
+}
+
+.promo-cta .primary:hover{
+background-color: #e6e6e680 !important;
+}
+
+.promo-cta .primary:active{
+background-color: #cdcdcd80 !important;
+}
+
+
+:root{
+  --new-color: #ffffff7d !important;
+  --theme-color: black !important;
+  --image-back: url("./img/imglight.png") !important;
+  --icon-theme: url("icons/private-light.svg") !important;
+  }
+}
+
+}

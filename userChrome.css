@@ -1,0 +1,534 @@
+
+.reset-icon {
+display: none !important;
+}
+
+
+.tabbrowser-tab .tab-background:is([selected], [multiselected]) {
+  border-top: 1px solid #ffffff1f !important;
+	border-bottom: 1px solid #0000001f !important;
+}
+
+
+
+/* Style for pinned tabs with dynamically set favicon color */
+.tabbrowser-tab[pinned] .tab-background:not([selected], [multiselected]) {
+  opacity: 0.2; /* Optional: make background slightly transparent */
+  border-top: 1px solid #ffffff1f !important;
+	border-bottom: 1px solid #0000001f !important;
+}
+.tabbrowser-tab[pinned] .tab-background:is([selected], [multiselected]) {
+	border-top: 1px solid #ffffff1f !important;
+	border-bottom: 1px solid #0000001f !important;
+  opacity: 0.5; 
+  box-shadow: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+.tabbrowser-tab[pinned]:not([zen-essential="true"]) .tab-background:not([selected], [multiselected]) {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid #ffffff1f !important;
+	border-bottom: 1px solid #0000001f !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+tab-group:has(tab[hidden]){
+  display: none !important;
+}
+tab-group {
+  display: grid !important;
+  background: color-mix(in srgb, var(--tab-group-color-invert) 10%, transparent) !important;
+  border-radius: var(--border-radius-medium);
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-inline: 2px !important;
+  border: 2px solid color-mix(in srgb, var(--tab-group-color-invert) 10%, transparent);
+  padding: 3.1px 0px !important;
+  max-height: 1000px !important;
+
+  &>vbox {
+    padding-top: 2px !important;
+  }
+
+  & .tab-group-label-container {
+    &:after {
+      display: none !important;
+    }
+
+    &>label {
+      background: transparent !important;
+      border: unset !important;
+      font-weight: 500 !important;
+      text-align: unset !important;
+      color: var(--sidebar-text-color) !important;
+      padding-left: 32px !important;
+    }
+    &>label::before {
+      content: "" !important;
+      position: absolute !important;
+      left: 5px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 16px !important;
+      height: 16px !important;
+      background-color: var(--sidebar-text-color);
+      mask-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjAgOS41MDJWOC43NWEyLjI1IDIuMjUgMCAwIDAtMi4yNS0yLjI1aC01LjcyNWwtMi4zOC0xLjk4QTIuMjUgMi4yNSAwIDAgMCA4LjIwNCA0SDQuMjVBMi4yNSAyLjI1IDAgMCAwIDIgNi4yNWwtLjAwNCAxMS41QTIuMjUgMi4yNSAwIDAgMCA0LjI0NiAyMEgxOC40N2ExLjc1IDEuNzUgMCAwIDAgMS42OTgtMS4zMjVsMS43NS02Ljk5OGExLjc1IDEuNzUgMCAwIDAtMS42OTgtMi4xNzVIMjBaTTQuMjUgNS41aDMuOTU2YS43NS43NSAwIDAgMSAuNDguMTczbDIuNTg4IDIuMTU0YS43NS43NSAwIDAgMCAuNDguMTczaDUuOTk2YS43NS43NSAwIDAgMSAuNzUuNzV2Ljc1Mkg2LjQyNGEyLjI1IDIuMjUgMCAwIDAtMi4xODMgMS43MDRsLS43NDQgMi45NzhMMy41IDYuMjVhLjc1Ljc1IDAgMCAxIC43NS0uNzVabTEuNDQ3IDYuMDdhLjc1Ljc1IDAgMCAxIC43MjctLjU2OEgyMC4yMmEuMjUuMjUgMCAwIDEgLjI0Mi4zMWwtMS43NSA2Ljk5OWEuMjUuMjUgMCAwIDEtLjI0Mi4xODlINC4yODVhLjI1LjI1IDAgMCAxLS4yNDMtLjMxbDEuNjU1LTYuNjJaIiBmaWxsPSIjMDAwMDAwIi8+PC9zdmc+');
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+  }
+  }
+
+  &[collapsed] {
+    overflow: hidden !important;
+    max-height: 35px !important;
+
+    & tab {
+      opacity: 0 !important;
+    }
+    & .tab-group-label-container > label {
+      background: transparent !important;
+      border: unset !important;
+      font-weight: 500 !important;
+      text-align: unset !important;
+      color: var(--sidebar-text-color) !important;
+      padding-left: 32px !important;
+    }
+    & .tab-group-label-container > label::before {
+      content: "" !important;
+      position: absolute !important;
+      left: 5px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 16px !important;
+      height: 16px !important;
+      background-color: var(--sidebar-text-color);
+      mask-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNOC4yMDcgNGMuNDYgMCAuOTA4LjE0MSAxLjI4NC40MDJsLjE1Ni4xMkwxMi4wMjIgNi41aDcuNzI4YTIuMjUgMi4yNSAwIDAgMSAyLjIyOSAxLjkzOGwuMDE2LjE1OC4wMDUuMTU0djlhMi4yNSAyLjI1IDAgMCAxLTIuMDk2IDIuMjQ1TDE5Ljc1IDIwSDQuMjVhMi4yNSAyLjI1IDAgMCAxLTIuMjQ1LTIuMDk2TDIgMTcuNzVWNi4yNWEyLjI1IDIuMjUgMCAwIDEgMi4wOTYtMi4yNDVMNC4yNSA0aDMuOTU3Wm0xLjQ0IDUuOTc5YTIuMjUgMi4yNSAwIDAgMS0xLjI0NC41MTJsLS4xOTYuMDA5LTQuNzA3LS4wMDF2Ny4yNTFjMCAuMzguMjgyLjY5NC42NDguNzQzbC4xMDIuMDA3aDE1LjVhLjc1Ljc1IDAgMCAwIC43NDMtLjY0OGwuMDA3LS4xMDJ2LTlhLjc1Ljc1IDAgMCAwLS42NDgtLjc0M0wxOS43NSA4aC03LjcyOUw5LjY0NyA5Ljk3OVpNOC4yMDcgNS41SDQuMjVhLjc1Ljc1IDAgMCAwLS43NDMuNjQ4TDMuNSA2LjI1djIuNzQ5TDguMjA3IDlhLjc1Ljc1IDAgMCAwIC4zOTUtLjExM2wuMDg1LS4wNiAxLjg5MS0xLjU3OC0xLjg5LTEuNTc1YS43NS43NSAwIDAgMC0uMzc3LS4xNjdMOC4yMDcgNS41WiIgZmlsbD0iIzAwMDAwMCIvPjwvc3ZnPg==');
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+  }
+  }
+ & .tab-content {
+   margin-left: 6px !important;
+}
+}
+
+
+
+
+
+
+
+
+/* Custom style for #PanelUI-zen-gradient-generator */
+#PanelUI-zen-gradient-generator {
+    --panel-width: 420px !important;
+    /* Add more styles here if needed */
+}
+/* cleaned url
+#urlbar-container:has(> #urlbar[open]) {
+     
+      
+      #urlbar-input {
+        font-size: 1.5em !important;
+        color: unset !important;
+      }
+     
+      .urlbarView-row-inner {
+        flex-wrap: unset !important;
+        font-weight: 500 !important;
+        font-size: 1.05em !important;
+      }
+      
+      .urlbarView-row-inner strong {
+        font-weight: unset !important;
+      }
+      
+      .urlbarView-url {
+        --urlbarView-second-line-indent: 15px;
+        font-size: inherit !important;
+        color: color-mix(in srgb, currentColor 30%, transparent) !important;
+      }   
+}
+*/
+
+#zen-current-workspace-indicator {
+ padding: 7px !important;
+ padding-left: 12px !important;
+   filter: saturate(0.7) !important;
+   opacity: 0.8;
+}
+
+#zen-sidebar-web-panel {
+   background: none !important;  
+  border: none !important;
+  box-shadow: none !important;
+}
+#zen-sidebar-web-header {
+   border: none !important;
+   margin: -5px;
+}
+#zen-sidebar-panels-wrapper {
+   border: none !important;
+   margin: -3px;
+}
+#zen-sidebar-web-panel-browser-containers {
+   border-radius: 7px !important;
+   overflow: hidden !important;
+}
+
+
+
+
+.PanelUI-zen-profiles-item {
+  transition: transform 0.07s ease;
+}
+
+.PanelUI-zen-profiles-item:active {
+  transform: scale(0.95);
+}
+
+
+
+#zen-sidepanel-button {
+  display: none !important;
+}
+
+
+#sidebar-box {
+   margin-bottom: 0px !important; 
+  margin-right: 3px !important;
+  background: rgba(10,10,10,0.4) !important;
+}
+#sidebar-search-container > #search-box,
+#viewButton {
+  margin: 4px 8px !important;
+
+  appearance: none !important;
+  background-color: var(--zen-main-browser-background) !important;
+  border-radius: 5px !important;
+  border: none !important;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  &:active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+
+
+
+
+
+#sidebar-2-splitter-pinned { 
+   background: transparent !important;
+   border: transparent !important;
+}
+#sidebar-2-toolbar {
+   background: rgba(0,0,0,0.4) !important;
+   backdrop-filter: blur(33px); 
+   height: 40px !important;
+  color-scheme: dark !important;
+}
+#sidebar-2-splitter-unpinned {
+  background: transparent !important;
+}
+#sidebar-2-main:not(hover) {
+  opacity: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  transition: width 0.17s ease !important;
+}
+#sidebar-2-main:hover {
+  background: rgba(0,0,0,0) !important;
+  filter: saturate(7) !important;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  opacity: 1 !important;
+  transition: width 0.17s ease !important;
+  width: 45px !important;
+}
+#browser:has(#sidebar-2[pinned="false"]) {
+    #sidebar-2-box {
+  position: fixed !important;
+  right: 0 !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  }
+}
+#sidebar-2-box {
+   margin-top: 9.9px !important;
+  margin-bottom: 9.9px !important;
+  margin-right: 6px !important;
+  margin-left: -8px !important;
+ background: transparent !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+@media (-moz-bool-pref: "zen.view.use-single-toolbar") {
+  #zen-appcontent-navbar-container {
+display: none !important;
+  }
+
+#zen-appcontent-wrapper {
+  margin-top: var(--zen-element-separation) !important;
+  margin-right: 0.1px !important; 
+  }
+
+:root:is([inDOMFullscreen="true"]) {
+ #zen-appcontent-wrapper {
+   margin: 0 !important;
+  }
+}
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.tab-icon-overlay {
+  opacity: 1 !important;
+  margin: initial !important;
+  border: none !important;
+  margin-right: 32px !important;
+  transform: translate(120%, 50%) scale(1.6) !important;
+  color: light-dark(black, white) !important;
+  background-color: transparent !important;
+  transition: 0.3s !important;
+}
+
+.tab-icon-overlay:hover {
+  color: var(--zen-primary-color) !important;
+  transition: 0.3s !important;
+}
+
+.tab-icon-overlay:is([soundplaying], [muted]):not([selected]) {
+  display: block !important;
+}
+
+/* Hide sound labels */
+.tab-icon-sound-label, 
+.tab-icon-sound-playing-label {
+  display: none !important;
+}
+
+/* Mute button takes place of tab icon when tabs are not expanded */
+@media not (-moz-bool-pref: "zen.view.sidebar-expanded") {
+  .tab-icon-overlay {
+    margin-left: 25px !important;
+    margin-right: 10px !important; 
+   transform: translate(-35%, 50%) scale(1.6) !important;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+  
+  #zen-workspaces-button {
+    &:not([as-button='true']) {
+width: 100%;
+  }
+    & toolbarbutton {
+   width: auto !important;
+   flex: 1 1 4px !important;       
+   min-width: 0;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#zen-workspaces-button {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    box-shadow: 0px 1px 10px rgba(0,0,0,0.1) !important;
+    border-radius: 8px !important;
+    border: 1px solid #ffffff0c !important;
+  }
+  
+  .titlebar-button > .toolbarbutton-icon {
+    background: #ffffff1f !important;
+    list-style-image: none;
+    border-radius: 10px;
+    transition: 0.2s ease;
+    border: 1px solid #3aea4900 !important;
+  }
+  .titlebar-min > .toolbarbutton-icon {
+    background: #ffffff1f !important;
+  }
+  .titlebar-close > .toolbarbutton-icon {
+    background: #ffffff1f !important;
+  }
+  
+  .titlebar-button:hover > .toolbarbutton-icon {
+    background: #3aea4994 !important;
+    border: 1px solid #3aea49 !important;
+  }
+  .titlebar-min:hover > .toolbarbutton-icon {
+    background: #fac53794 !important;
+    border: 1px solid #fac537 !important;
+  }
+  .titlebar-close:hover > .toolbarbutton-icon {
+    background: #f34f5694 !important;
+    border: 1px solid #f34f56 !important;
+  }
+  /*
+  .titlebar-button {
+    background: transparent !important;
+    padding-inline: 5px !important;
+  }
+  
+  */
+  #zen-workspaces-button {
+    .subviewbutton {
+        &[active="true"] {
+            background: rgba(255, 255, 255, 0.1) !important;
+            transition: 0.3s !important;
+            border: 1px solid #ffffff0a !important;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.062) !important;
+  
+        }
+  
+        &:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transition: 0.3s !important;
+        }
+  
+        &:after {
+            display: none !important;
+        }
+  
+    }
+  }
+  
+  #zen-current-workspace-indicator {
+      padding: 10px calc(4px + var(--tab-inline-padding)) !important;
+      font-weight: 500 !important; 
+  }
+  
+  .tab-close-button {
+      padding: 5px !important;
+      border-radius: 20px !important;
+  }
+  
+  
+  .close-icon:hover {
+      background-color: color-mix(in srgb, currentColor 20%, transparent) !important;
+  }
+  
+  /* This style simply makes the tab stay visible while it is being closed as well as makes the transition a bit slower */
+  
+  .tabbrowser-tab:not([pinned],[fadein]){
+    transition-duration: 240ms, 240ms !important;
+    transition-timing-function: ease-out, ease-out !important;
+    visibility: visible !important;
+  }
+  .tab-content:not([fadein],[pinned])
+  .tab-icon-pending:not([fadein]),
+  .tab-icon-image:not([fadein]),
+  .tab-label:not([fadein]){
+    visibility: visible !important;
+  }
+  .tab-label:not([fadein]){
+    display: flex !important;
+  }
+}
