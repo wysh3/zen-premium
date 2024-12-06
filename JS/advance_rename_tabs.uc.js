@@ -2,7 +2,7 @@
 (function () {
     const CONFIG = {
         maxTitleLength: 50,
-        minInputWidth: 130,
+        minInputWidth: 320,
         hoverDelay: 300,
         ollamaApiEndpoint: 'http://localhost:11434/api/generate',
         styles: `
@@ -59,7 +59,7 @@
                 transition: all 0.2s ease-in-out;
                 z-index: 10;
                 min-width: 50px;
-                max-width: calc(100% - 72px);
+                max-width: calc(100% - 74px);
                 width: auto;
                 white-space: nowrap;
             }
