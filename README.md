@@ -1,26 +1,69 @@
 # Zen/Firefox Browser Customization 
 
+A guide to customize your Zen/Firefox browser with enhanced features using custom scripts and additional tools.
+
+
 
 ## Prerequisites
 
--> Before you begin, you need to enable custom scripts in Firefox. Please follow the steps provided in the **[fx-autoconfig repository](https://github.com/MrOtherGuy/fx-autoconfig)** to configure this.
+Before you begin, ensure the following are set up:
 
--> Install Ollama on your system and pull llama3.2:1b **[ollama website](https://ollama.com/)**
+1. **Enable Custom Scripts in Firefox**:  
+   Follow the instructions in the **[fx-autoconfig repository](https://github.com/MrOtherGuy/fx-autoconfig)** to enable custom scripts in Firefox.
 
-   (You can use other models too but you'll need to edit the code according to the change)
+2. **Install Ollama**:  
+   Download and install Ollama on your system from their **[official website](https://ollama.com/)**.  
+   - Pull the `llama3.2:1b` model using the Ollama interface.  
+   - _(Note: You can use other models, but you'll need to modify the code accordingly.)_
+
+
 
 ## Installation Steps
 
-### Enable Custom Scripts in Firefox
+### 1. Enable Custom Scripts in Firefox
+- Follow the detailed steps provided in the **[fx-autoconfig repository](https://github.com/MrOtherGuy/fx-autoconfig)** to configure custom scripts in your browser.
 
-Follow the steps given in the readme.md of [fx-autoconfig repository](https://github.com/MrOtherGuy/fx-autoconfig) .
+### 2. Add Custom Features
+- Copy the files from this repository to their respective folders inside your Firefox profile.  
+  (Refer to the profile location guide if needed: `about:profiles` in Firefox.)
 
-### Adding Features
+- Restart Zen/Firefox after clearing the **Startup Cache**:  
+  Go to `about:support` → Click on **"Clear Startup Cache"**.
 
-Add the files to their respective folder inside your profile
-
-restart zen/firefox after clearing the startup cache in about:support 
-
-now you're ready to use the browser in your way.
+### 3. Test Your Customization
+- Once restarted, your Zen/Firefox browser is ready to use with the newly added features.
 
 
+
+## Features
+
+- Enhanced customization of the Zen/Firefox interface.
+- Integrated Ollama functionality with support for `llama3.2:1b` or other models.
+- Flexible architecture for adding further custom scripts and tools.
+
+
+## Troubleshooting
+
+- **Scripts Not Working?**  
+  - Double-check that custom scripts are enabled correctly using the **[fx-autoconfig setup guide](https://github.com/MrOtherGuy/fx-autoconfig)**.
+  - Verify that all files are placed in the appropriate directories.
+
+- **Startup Cache Issues?**  
+  - Ensure you’ve cleared the **Startup Cache** from `about:support`.
+
+- **Ollama Errors?**  
+  - Confirm that the required `llama3.2:1b` model is downloaded and installed properly.  
+  - Edit the code to match your chosen model if it differs from `llama3.2:1b`.
+
+---
+
+## Credits
+
+- **Clear Button JavaScript**: Special thanks to [Futuremappermydud](https://github.com/Futuremappermydud/lambda-zen/) for providing the clear button implementation.
+
+- **fx-autoconfig**: Acknowledgments to [MrOtherGuy](https://github.com/MrOtherGuy/fx-autoconfig) for the outstanding Firefox customization scripts and resources.
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute with attribution.
