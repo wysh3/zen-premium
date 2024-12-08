@@ -23,11 +23,11 @@
 
             .tab-rename-icon {
                 position: absolute;
-                right: 2px;
+                left: 2px;
                 top: 8px;
                 transform: translateY(-50%);
-                width: 15px;
-                height: 15px;
+                width: 16px;
+                height: 16px;
                 background: linear-gradient(135deg, rgba(51,153,255,0.9) 0%, rgba(51,153,255,0.7) 100%);
                 border-radius: 50%;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -39,7 +39,7 @@
                 align-items: center;
                 justify-content: center;
                 color: white;
-                font-size: 9px;
+                font-size: 10px;
             }
 
             .tab-rename-inline {
