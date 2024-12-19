@@ -66,4 +66,4 @@ Before you begin, ensure the following are set up:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute with attribution.
+This project is licensed under the [GPL-3.0 License](LICENSE). Feel free to use, modify, and distribute with attribution.
