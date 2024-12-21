@@ -1,0 +1,46 @@
+/* add this to your userChrome.css */
+#sidebar-2-splitter-pinned { 
+   background: transparent !important;
+   border: transparent !important;
+}
+#sidebar-2-toolbar {
+   background: rgba(0,0,0,0.4) !important;
+   backdrop-filter: blur(33px); 
+   height: 40px !important;
+  color-scheme: dark !important;
+}
+#sidebar-2-splitter-unpinned {
+  background: transparent !important;
+}
+#sidebar-2-main:not(hover) {
+  opacity: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  transition: width 0.17s ease !important;
+}
+#sidebar-2-main:hover {
+  background: rgba(0,0,0,0) !important;
+  filter: saturate(7) !important;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  opacity: 1 !important;
+  transition: width 0.17s ease !important;
+  width: 45px !important;
+}
+#browser:has(#sidebar-2[pinned="false"]) {
+    #sidebar-2-box {
+  position: fixed !important;
+  right: 0 !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  }
+}
+#sidebar-2-box {
+   margin-top: 9.9px !important;
+  margin-bottom: 9.9px !important;
+  margin-right: 6px !important;
+  margin-left: -8px !important;
+ background: transparent !important;
+}
