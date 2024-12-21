@@ -1,3 +1,4 @@
+/* move the second_sidebar file and second_sidebar.uc.mjs script to JS folder */
 /* add this to your userChrome.css */
 #sidebar-2-splitter-pinned { 
    background: transparent !important;
