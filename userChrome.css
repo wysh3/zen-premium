@@ -1,43 +1,4 @@
-
-@media screen and (min-height: 600px) {
-  .urlbarView-results[wrap] > .urlbarView-row {
-    &:where(:not([rich-suggestion])) > .urlbarView-row-inner {
-      flex-wrap: nowrap !important;
-
-      > .urlbarView-no-wrap {
-        max-width: fit-content !important;
-        flex-basis: none !important;
-      }
-    }
-
-    &[has-url] > .urlbarView-row-inner > .urlbarView-url {
-      &:-moz-locale-dir(ltr) {
-        margin-left: unset !important;
-      }
-    }
-
-
-    .urlbarView[action-override] &[has-url]:not([restyled-search]),
-    &[has-url]:not([type$=tab], [sponsored], [restyled-search]),
-    &[has-url]:is([type=remotetab], [sponsored]):is(:hover, [selected]),
-    &[type=tabtosearch] {
-      .urlbarView-title-separator {
-        display: flex !important;
-      }
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
+/* boxy tab close button */
 .tab-close-button.close-icon {
   border-radius: 6px !important;
 }
@@ -54,56 +15,27 @@
 
 
 
-#urlbar-zoom-button {
-background: rgba(255,255,255,0.1) !important;
+
+
+
+
+
+
+
+
+/* arcify url bar */
+#urlbar:is([breakout][breakout-extend], [breakout][usertyping][focused]):after {
+   top: -6px !important
 }
-
-#urlbar-input {
-margin-left: 4px !important;
-transition: margin-left 0.2s ease;
-}
-
-#urlbar-input:hover {
-margin-left: 0px !important;
-}
-
-
-
-
-
-
-
-
-/*
- * .search-one-offs {
- *    position: absolute !important;
- *    top: -300px !important;
- *    background: var(--toolbar-field-background-color) !important;
- *    display: flex !important;
- *    flex-direction: row !important;
- *    max-height: 0 !important;
- *    overflow: hidden !important;
- *    opacity: 0 !important;
- *    transition: max-height 0.1s ease-in-out, opacity 0.1s ease-in-out !important;
- * }
- *
- * #urlbar:hover .search-one-offs{
- *    max-height: 50px !important;
- *    opacity: 1 !important;
- *    top: 0 !important;
- * }
- */
 
 .search-one-offs{display: none !important;}
 
 #urlbar[open] {
 top: calc(var(--zen-toolbar-height) * 3.3) !important;
 }
-#urlbar-background{
-border-radius: 12px !important;
-}
 #urlbar[breakout-extend="true"] > #urlbar-background {
-background: rgba(20,20,20) !important;
+background: #7f7e7e !important;
+filter: brightness(69%) !important;
 }
 
 
@@ -125,6 +57,7 @@ margin-right: 0px !important;
 #urlbar-input {
 margin-left: 5px !important;
 margin-right: 5px !important;
+font-size: 20px !important;
 }
 }
 
@@ -190,7 +123,7 @@ margin-right: 5px !important;
 
 
 
-
+/* show full tab previw text */
 .tab-preview-title {
   overflow: hidden !important;
   -webkit-line-clamp: none !important;
@@ -198,20 +131,46 @@ margin-right: 5px !important;
 
 
 
-#PanelUI-menu-button {
-list-style-image: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="utf-8"%3F><!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:%23FFFFFF;}</style><path class="st0" d="M16,22.2c3.4,0,6.2-2.8,6.2-6.2c0-3.4-2.8-6.2-6.2-6.2c-3.4,0-6.2,2.8-6.2,6.2C9.8,19.4,12.6,22.2,16,22.2z M20.9,16c0,2.7-2.2,4.9-4.9,4.9s-4.9-2.2-4.9-4.9s2.2-4.9,4.9-4.9S20.9,13.3,20.9,16z"/><path class="st0" d="M26.7,16c0,5.9-4.8,10.7-10.7,10.7S5.3,21.9,5.3,16S10.1,5.3,16,5.3S26.7,10.1,26.7,16z M16,24.6c4.8,0,8.6-3.9,8.6-8.6S20.8,7.4,16,7.4S7.4,11.2,7.4,16S11.2,24.6,16,24.6z"/><path class="st0" d="M32,16c0,8.8-7.2,16-16,16S0,24.8,0,16S7.2,0,16,0S32,7.2,32,16z M16,29.1c7.3,0,13.1-5.9,13.1-13.1S23.3,2.9,16,2.9S2.9,8.7,2.9,16S8.7,29.1,16,29.1z"/></svg>') !important;
+
+
+
+
+
+/* Glassy tabs */
+.tab-background, #tabs-newtab-button {
+    transition: outline .5s fade-out,
+                box-shadow .6s fade-out;
+    #zen-essentials-container:has(&) .tab-background {
+        box-shadow: 0px 2px 0px 0px #FFFFFF0f, 
+                    0px 2px 8px 0px #00000040 !important;
+        outline: 1px solid #ffffff10 !important;
+        outline-offset: -1px !important;
+    }
+    &:hover, .tabbrowser-tab[selected]:has(&) .tab-background, .tab-stack:hover:has(&) .tab-background, #zen-essentials-container:has(&) .tabbrowser-tab:hover .tab-background {
+        box-shadow: 0px 2px 0px 0px #FFFFFF0f, 
+                    0px 2px 8px 0px #00000040,
+                    inset 0px 8px 8px 0px #FFFFFF07 !important;
+        outline: 1px solid #ffffff10 !important;
+        outline-offset: -1px !important;
+    }
+    *:has(&) { overflow: visible !important; }
+}
+
+/* url depth */
+#urlbar-background {
+    border: 1px solid #ffffff10 !important;
+    box-shadow: inset 0px 2px 0px 0px #00000020, inset 0px 2px 8px 0px #00000040 !important;
+}
+.urlbar-input {
+    color: #ffffffcc !important;
+    padding-left: 4px !important; 
 }
 
 
-/* sets the linkly Extention to the arc copy link icon */
-#pageAction-urlbar-copy-frame-url_jeffersonscher_com {
-list-style-image: url("https://raw.githubusercontent.com/neurokitti/Arc_Zen_Theme/6da4c1ca78cc521bea1026ff024fcc8528ae6a49/icons/copy_link.svg") !important;
-scale: 1;
-}
 
-
-.reset-icon {
-  display: none !important;
+/* extension , zoom button box black -> transparent */
+ #identity-icon-box, #urlbar-zoom-button{
+  background: transparent !important;
 }
 
 
@@ -220,27 +179,27 @@ scale: 1;
 
 
 
-.tabbrowser-tab .tab-background:is([selected], [multiselected]) {
-  border-top: 1px solid #ffffff1f !important;
-  border-bottom: 1px solid #0000001f !important;
-}
+
+
+
+
+
+
+
+
+
+
+/* improve tabs acc to js */
 /* Style for pinned tabs with dynamically set favicon color */
 .tabbrowser-tab[pinned] .tab-background:not([selected], [multiselected]) {
   opacity: 0.2;
-  border-top: 1px solid #ffffff1f !important;
-  border-bottom: 1px solid #0000001f !important;
 }
 .tabbrowser-tab[pinned] .tab-background:is([selected], [multiselected]) {
-  border-top: 1px solid #ffffff1f !important;
-  border-bottom: 1px solid #0000001f !important;
   opacity: 0.5;
-  box-shadow: none !important;
 }
 .tabbrowser-tab[pinned]:not([zen-essential="true"]) .tab-background:not([selected], [multiselected]) {
   opacity: 1;
   background-color: rgba(255, 255, 255, 0.1) !important;
-  border-top: 1px solid #ffffff1f !important;
-  border-bottom: 1px solid #0000001f !important;
 }
 
 
@@ -251,7 +210,7 @@ scale: 1;
 
 
 
-
+/* css tab groups */
 tab-group:has(tab[hidden]){
   display: none !important;
 }
@@ -352,10 +311,6 @@ tab-group {
 
 
 
-#sidebar-box {
-margin-bottom: 0px !important;
-margin-right: 3px !important;
-}
 
 
 
@@ -447,6 +402,7 @@ margin-right: 3px !important;
 
 
 
+/* better workspaces */
 #zen-workspaces-button {
 background-color: rgba(255, 255, 255, 0.04) !important;
 box-shadow: 0px 1px 10px rgba(0,0,0,0.1) !important;
@@ -524,23 +480,7 @@ font-weight: 500 !important;
   background-color: color-mix(in srgb, currentColor 20%, transparent) !important;
 }
 
-/* This style simply makes the tab stay visible while it is being closed as well as makes the transition a bit slower */
 
-.tabbrowser-tab:not([pinned],[fadein]){
-  transition-duration: 240ms, 240ms !important;
-  transition-timing-function: ease-out, ease-out !important;
-  visibility: visible !important;
-}
-.tab-content:not([fadein],[pinned])
-.tab-icon-pending:not([fadein]),
-.tab-icon-image:not([fadein]),
-.tab-label:not([fadein]){
-  visibility: visible !important;
-}
-.tab-label:not([fadein]){
-  display: flex !important;
-}
-}
 
 
 
