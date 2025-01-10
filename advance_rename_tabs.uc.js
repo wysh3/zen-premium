@@ -6,80 +6,80 @@
         hoverDelay: 300,
         ollamaApiEndpoint: 'http://localhost:11434/api/generate',
         styles: `
-            @keyframes loading-pulse-animation {
-                0% {
-                    transform: translateY(-50%) scale(0.9);
-                    opacity: 0.7;
-                }
-                50% {
-                    transform: translateY(-50%) scale(1.05);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(-50%) scale(0.9);
-                    opacity: 0.7;
-                }
+        @keyframes loading-pulse-animation {
+            0% {
+                transform: translateY(-50%) scale(0.9);
+                opacity: 0.7;
             }
-
-            .tab-rename-icon {
-                position: absolute;
-                left: 2px;
-                top: 8px;
-                transform: translateY(-50%);
-                width: 16px;
-                height: 16px;
-                background: linear-gradient(135deg, rgba(51,153,255,0.9) 0%, rgba(51,153,255,0.7) 100%);
-                border-radius: 50%;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                opacity: 0;
-                transition: all 0.3s ease;
-                cursor: pointer;
-                z-index: 10;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 10px;
-            }
-
-            .tab-rename-inline {
-                position: absolute;
-                top: 50%;
-                left: 0;
-                transform: translateY(-50%);
-                background: transparent;
-                border: 1px solid rgba(128, 128, 128, 0.5);
-                border-radius: 4px;
-                padding: 2px 5px;
-                font-size: inherit;
-                color: inherit;
-                left: 30px;
-                outline: none;
-                box-shadow: none;
-                transition: all 0.2s ease-in-out;
-                z-index: 10;
-                min-width: 50px;
-                max-width: calc(100% - 74px);
-                width: auto;
-                white-space: nowrap;
-            }
-
-            .tabbrowser-tab:hover .tab-rename-icon {
+            50% {
+                transform: translateY(-50%) scale(1.05);
                 opacity: 1;
             }
-            .tab-rename-icon:hover {
-                transform: translateY(-50%) scale(1.2);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            100% {
+                transform: translateY(-50%) scale(0.9);
+                opacity: 0.7;
             }
-            .tab-rename-loading {
-                opacity: 0.5;
-                cursor: wait;
-                animation: loading-pulse-animation 1s infinite;
-            }
-            .tab-rename-inline:focus {
-                border-color: rgba(51, 153, 255, 0.8);
-                box-shadow: 0 0 4px rgba(51, 153, 255, 0.5);
-            }
+        }
+
+        .tab-rename-icon {
+            position: absolute;
+            left: 2px;
+            top: 8px;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, rgba(51,153,255,0.9) 0%, rgba(51,153,255,0.7) 100%);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .tab-rename-inline {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background: transparent;
+            border: 1px solid rgba(128, 128, 128, 0.5);
+            border-radius: 4px;
+            padding: 2px 5px;
+            font-size: inherit;
+            color: inherit;
+            left: 30px;
+            outline: none;
+            box-shadow: none;
+            transition: all 0.2s ease-in-out;
+            z-index: 10;
+            min-width: 50px;
+            max-width: calc(100% - 74px);
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .tabbrowser-tab:hover .tab-rename-icon {
+            opacity: 1;
+        }
+        .tab-rename-icon:hover {
+            transform: translateY(-50%) scale(1.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .tab-rename-loading {
+            opacity: 0.5;
+            cursor: wait;
+            animation: loading-pulse-animation 1s infinite;
+        }
+        .tab-rename-inline:focus {
+            border-color: rgba(51, 153, 255, 0.8);
+            box-shadow: 0 0 4px rgba(51, 153, 255, 0.5);
+        }
         `
     };
 
@@ -105,9 +105,9 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: "llama3.2:1b",
-                     prompt: `Just provide a shortened version of this phrase in under 4 words: ${originalTitle}`,
-                     temperature: 0.1,
+                    model: "llama3.2:1b-instruct-q4_K_M",
+                    prompt: `Just shorten the following text to a concise clear 4-word version suitable for a tab name: ${originalTitle}`,
+                    temperature: 0.2,
                     stream: false
                 })
             });
@@ -117,11 +117,14 @@
             }
 
             const result = await response.json();
-            const renamedTitle = result.response.trim()
-                .split(/\s+/)
-                .slice(0, 4)
-                .join(' ')
-                .substring(0, CONFIG.maxTitleLength);
+            let renamedTitle = result.response.trim()
+            .split(/\s+/)
+            .slice(0, 4)
+            .join(' ')
+            .substring(0, CONFIG.maxTitleLength);
+
+            // Remove leading and trailing quotes if they exist
+            renamedTitle = renamedTitle.replace(/^"|"$/g, '');
 
             return renamedTitle || originalTitle;
         } catch (error) {
@@ -147,11 +150,11 @@
 
             // Disable icon during AI processing
             icon.classList.add('tab-rename-loading');
-            
+
             try {
                 const originalTitle = labelElement.textContent.trim();
                 const aiRename = await renameWithAI(originalTitle);
-                
+
                 // Only update if the rename is different
                 if (aiRename !== originalTitle) {
                     labelElement.textContent = aiRename;
@@ -240,19 +243,19 @@
     // Function to attach renaming functionality to tabs
     function addRenameListeners() {
         const tabs = document.querySelectorAll('.tabbrowser-tab:not([data-has-rename]), tab:not([data-has-rename]), [role="tab"]:not([data-has-rename])');
-        
+
         tabs.forEach((tab) => {
             const label = tab.querySelector('.tab-label, label, .tab-text');
             const favicon = tab.querySelector('.tab-icon, .tab-icon-image');
-            
+
             // Skip tabs without a label or already processed tabs
             if (!label) return;
 
             tab.setAttribute('data-has-rename', 'true');
-            
+
             let hoverTimer;
             let lastClickTime = 0;
-            
+
             // Add hover listener to show/create AI rename icon with delay
             const handleMouseEnter = () => {
                 hoverTimer = setTimeout(() => {
@@ -289,15 +292,15 @@
     function init() {
         // Prevent multiple initializations
         if (document.body.getAttribute('data-tab-renamer-initialized')) return;
-        
+
         injectStyles();
 
         addRenameListeners();
 
         // Observe for new tabs
         const tabContainer = document.getElementById('tabbrowser-tabs') ||
-            document.querySelector('.tabs-container') ||
-            document.querySelector('[role="tablist"]');
+        document.querySelector('.tabs-container') ||
+        document.querySelector('[role="tablist"]');
 
         if (tabContainer) {
             const observer = new MutationObserver((mutations) => {
@@ -307,9 +310,9 @@
                 }
             });
 
-            observer.observe(tabContainer, { 
-                childList: true, 
-                subtree: true 
+            observer.observe(tabContainer, {
+                childList: true,
+                subtree: true
             });
         }
 
