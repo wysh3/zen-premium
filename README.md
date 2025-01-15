@@ -52,8 +52,8 @@ Before you begin, ensure the following are set up:
   - Ensure you’ve cleared the **Startup Cache** from `about:support`.
 
 - **Ollama Errors?**  
-  - Confirm that the required `llama3.2:1b` model is downloaded and installed properly.  
-  - Edit the code to match your chosen model if it differs from `llama3.2:1b`.
+  - Confirm that the required `llama3.2:1b-instruct-q4_K_M` model is downloaded and installed properly.  
+  - Edit the code to match your chosen model if it differs from `llama3.2:1b-instruct-q4_K_M`.
 
 ---
 
