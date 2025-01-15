@@ -13,7 +13,7 @@ Before you begin, ensure the following are set up:
 
 2. **Install Ollama**:  
    Download and install Ollama on your system from their **[official website](https://ollama.com/)**.  
-   - Pull the `llama3.2:1b` model using the Ollama interface.  
+   - Pull the `llama3.2:1b-instruct-q4_K_M` model using the Ollama interface.  
    - _(Note: You can use other models, but you'll need to modify the code accordingly.)_
 
 
@@ -38,7 +38,7 @@ Before you begin, ensure the following are set up:
 ## Features
 
 - Enhanced customization of the Zen/Firefox interface.
-- Integrated Ollama functionality with support for `llama3.2:1b` or other models.
+- Integrated Ollama functionality with support for `llama3.2:1b-instruct-q4_K_M` or other models.
 - Flexible architecture for adding further custom scripts and tools.
 
 
