@@ -59,9 +59,9 @@ Before you begin, ensure the following are set up:
 
 ## Credits
 
-- **Clear Button JavaScript**: Special thanks to [Futuremappermydud](https://github.com/Futuremappermydud/lambda-zen/) for providing the clear button implementation.
+- **Clear Button JavaScript**: Thanks to [Futuremappermydud](https://github.com/Futuremappermydud/lambda-zen/)
 
-- **fx-autoconfig**: Acknowledgments to [MrOtherGuy](https://github.com/MrOtherGuy/fx-autoconfig) for the outstanding Firefox customization scripts and resources.
+- **fx-autoconfig**: Thanks to [MrOtherGuy](https://github.com/MrOtherGuy/fx-autoconfig)
 
 
 ## License
