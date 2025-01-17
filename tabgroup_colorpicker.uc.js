@@ -1,4 +1,4 @@
-// Function to handle swatch click and color change
+// Function to handle swatch right-click and color change
 function addColorPickerToSwatches() {
   const swatchContainer = document.querySelector('.tab-group-editor-swatches');
   if (!swatchContainer) return;
@@ -12,10 +12,10 @@ function addColorPickerToSwatches() {
   // Track the currently selected radio button
   let currentRadio = null;
 
-  // Add click handlers to all swatch labels
+  // Add right-click handlers to all swatch labels
   const swatchLabels = swatchContainer.querySelectorAll('.tab-group-editor-swatch');
   swatchLabels.forEach(label => {
-    label.addEventListener('click', (e) => {
+    label.addEventListener('contextmenu', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -28,7 +28,7 @@ function addColorPickerToSwatches() {
 
       // Get current color and set it as picker's value
       const currentColor = getComputedStyle(label)
-        .getPropertyValue('--tabgroup-swatch-color').trim();
+      .getPropertyValue('--tabgroup-swatch-color').trim();
       colorPicker.value = currentColor;
 
       // Open color picker
@@ -77,10 +77,10 @@ const observer = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
     for (const node of mutation.addedNodes) {
       if (node.classList &&
-          node.classList.contains('tab-group-editor-swatches')) {
+        node.classList.contains('tab-group-editor-swatches')) {
         addColorPickerToSwatches();
-        return;
-      }
+      return;
+        }
     }
   }
 });
