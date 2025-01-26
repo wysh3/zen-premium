@@ -1,4 +1,3 @@
-// Ultimate Tab Renamer with Dual AI Integration (Production Ready)
 (() => {
     const CONFIG = {
         maxTitleLength: 50,
@@ -11,9 +10,9 @@
                 model: 'llama3.2:1b-instruct-q4_K_M' // edit if you want to use other models
             },
             customApi: {
-                endpoint: 'API_BASE_URL',
+                endpoint: 'API_URL',
                 apiKey: 'API_KEY',
-                model: 'MODEL_NAME',
+                model: 'API_MODEL_NAME',
                 enabled: false //set it to true if you want to use custom api
             }
         },
@@ -82,19 +81,20 @@
         document.head.appendChild(style);
     };
 
-    // Enhanced title processing
+    // Enhanced title processing with markdown sanitization
     const processTitle = (text) => {
         return text.split(/\s+/)
         .slice(0, 4)
         .join(' ')
         .substring(0, CONFIG.maxTitleLength)
-        .replace(/^["'\s]+|["'\s]+$/g, '')
+        .replace(/^["'\s*]+|["'\s*]+$/g, '')
         .replace(/\s{2,}/g, ' ')
         .replace(/(?:^|\s)\W+/g, '')
+        .replace(/\*/g, '')
         .replace(/\b(a|an|the|and|of|in|on|at)\b/gi, (m) => m.toLowerCase());
     };
 
-    // Professional API handler with optimized prompts
+    // Professional API handler with sanitized prompts
     const renameWithAI = async (originalTitle) => {
         if (!originalTitle?.trim()) return originalTitle;
 
@@ -113,17 +113,17 @@
                     },
                     body: JSON.stringify(useOllama ? {
                         model: ollama.model,
-                        prompt: `Transform into 2-4 word tab title from: "${originalTitle}"\n- Remove platform names\n- Use title case\n- No special chars\n- Only respond with title`,
+                        prompt: `Transform the following text: "${originalTitle}"into 2-4 word tab title \n- Remove platform names/dates\n- Use title case\n- No markdown/asterisks\n- Respond ONLY with plain text title`,
                         temperature: 0.2,
                         stream: false
                     } : {
                         model: customApi.model,
                         messages: [{
                             role: "system",
-                            content: "You are a professional tab title optimizer. Respond ONLY with the optimized title in title case."
+                            content: "You are a professional tab title optimizer. Respond ONLY with the optimized title in title case without any formatting."
                         },{
                             role: "user",
-                            content: `Transform into 2-4 word tab title:\n"${originalTitle}"\n- Remove dates/platforms\n- Prioritize keywords\n- Max ${CONFIG.maxTitleLength} chars\n- No explanations`
+                            content: `Transform the following text: "${originalTitle}"into 2-4 word tab title\n- Remove platform names\n- Prioritize keywords\n- Max ${CONFIG.maxTitleLength} chars\n- No explanations`
                         }],
                         temperature: 0.2,
                         max_tokens: 25
