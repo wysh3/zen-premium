@@ -17,58 +17,80 @@
             }
         },
         styles: `
-        @keyframes loading-pulse {
-            0%, 100% { transform: translateY(-50%) scale(0.9); opacity: 0.7; }
-            50% { transform: translateY(-50%) scale(1.05); opacity: 1; }
-        }
-        .tab-rename-icon {
-            position: absolute;
-            left: 2px;
-            top: 8px;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            background: linear-gradient(135deg, #39f 0%, #36c 100%);
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            opacity: 0;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-        }
-        .tab-rename-inline {
-            position: absolute;
-            top: 50%;
-            left: 30px;
-            transform: translateY(-50%);
-            background: transparent;
-            border: 1px solid rgba(128,128,128,0.5);
-            border-radius: 4px;
-            padding: 2px 5px;
-            font: inherit;
-            color: inherit;
-            outline: none;
-            min-width: 50px;
-            max-width: calc(100% - 74px);
-            transition: all 0.2s ease-in-out;
-            z-index: 10;
-        }
-        .tabbrowser-tab:hover .tab-rename-icon { opacity: 1; }
-        .tab-rename-icon:hover { transform: translateY(-50%) scale(1.2); }
-        .tab-rename-loading {
-            opacity: 0.5;
-            cursor: wait;
-            animation: loading-pulse 1s infinite;
-        }
-        .tab-rename-inline:focus {
-            border-color: #39f;
-            box-shadow: 0 0 4px rgba(51,153,255,0.5);
-        }`
+        @keyframes loading-pulse-animation {
+                0% {
+                    transform: translateY(-50%) scale(0.9);
+                    opacity: 0.7;
+                }
+                50% {
+                    transform: translateY(-50%) scale(1.05);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-50%) scale(0.9);
+                    opacity: 0.7;
+                }
+            }
+
+            .tab-rename-icon {
+                position: absolute;
+                left: 2px;
+                top: 8px;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                background: linear-gradient(135deg, rgba(51,153,255,0.9) 0%, rgba(51,153,255,0.7) 100%);
+                border-radius: 50%;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                opacity: 0;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                z-index: 10;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 10px;
+            }
+
+            .tab-rename-inline {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                background: transparent;
+                border: 1px solid rgba(128, 128, 128, 0.5);
+                border-radius: 4px;
+                padding: 2px 5px;
+                font-size: inherit;
+                color: inherit;
+                left: 30px;
+                outline: none;
+                box-shadow: none;
+                transition: all 0.2s ease-in-out;
+                z-index: 10;
+                min-width: 50px;
+                max-width: calc(100% - 74px);
+                width: auto;
+                white-space: nowrap;
+            }
+
+            .tabbrowser-tab:hover .tab-rename-icon {
+                opacity: 1;
+            }
+            .tab-rename-icon:hover {
+                transform: translateY(-50%) scale(1.2);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+            .tab-rename-loading {
+                opacity: 0.5;
+                cursor: wait;
+                animation: loading-pulse-animation 1s infinite;
+            }
+            .tab-rename-inline:focus {
+                border-color: rgba(51, 153, 255, 0.8);
+                box-shadow: 0 0 4px rgba(51, 153, 255, 0.5);
+            }`
     };
 
     // Style injection with singleton pattern
