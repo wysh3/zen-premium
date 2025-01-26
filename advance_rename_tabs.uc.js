@@ -1,26 +1,27 @@
-// Comprehensive Tab Renaming UserChrome Script
-(function () {
+// Ultimate Tab Renamer with Dual AI Integration (Production Ready)
+(() => {
     const CONFIG = {
         maxTitleLength: 50,
         minInputWidth: 320,
         hoverDelay: 300,
-        ollamaApiEndpoint: 'http://localhost:11434/api/generate',
+        apiConfig: {
+            ollama: {
+                endpoint: 'http://localhost:11434/api/generate',
+                enabled: true, //set it to false if you want to prioritize custom api or do not want to use ollama
+                model: 'llama3.2:1b-instruct-q4_K_M' // edit if you want to use other models
+            },
+            customApi: {
+                endpoint: 'API_BASE_URL',
+                apiKey: 'API_KEY',
+                model: 'MODEL_NAME',
+                enabled: false //set it to true if you want to use custom api
+            }
+        },
         styles: `
-        @keyframes loading-pulse-animation {
-            0% {
-                transform: translateY(-50%) scale(0.9);
-                opacity: 0.7;
-            }
-            50% {
-                transform: translateY(-50%) scale(1.05);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-50%) scale(0.9);
-                opacity: 0.7;
-            }
+        @keyframes loading-pulse {
+            0%, 100% { transform: translateY(-50%) scale(0.9); opacity: 0.7; }
+            50% { transform: translateY(-50%) scale(1.05); opacity: 1; }
         }
-
         .tab-rename-icon {
             position: absolute;
             left: 2px;
@@ -28,7 +29,7 @@
             transform: translateY(-50%);
             width: 16px;
             height: 16px;
-            background: linear-gradient(135deg, rgba(51,153,255,0.9) 0%, rgba(51,153,255,0.7) 100%);
+            background: linear-gradient(135deg, #39f 0%, #36c 100%);
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             opacity: 0;
@@ -41,288 +42,209 @@
             color: white;
             font-size: 10px;
         }
-
         .tab-rename-inline {
             position: absolute;
             top: 50%;
-            left: 0;
+            left: 30px;
             transform: translateY(-50%);
             background: transparent;
-            border: 1px solid rgba(128, 128, 128, 0.5);
+            border: 1px solid rgba(128,128,128,0.5);
             border-radius: 4px;
             padding: 2px 5px;
-            font-size: inherit;
+            font: inherit;
             color: inherit;
-            left: 30px;
             outline: none;
-            box-shadow: none;
-            transition: all 0.2s ease-in-out;
-            z-index: 10;
             min-width: 50px;
             max-width: calc(100% - 74px);
-            width: auto;
-            white-space: nowrap;
+            transition: all 0.2s ease-in-out;
+            z-index: 10;
         }
-
-        .tabbrowser-tab:hover .tab-rename-icon {
-            opacity: 1;
-        }
-        .tab-rename-icon:hover {
-            transform: translateY(-50%) scale(1.2);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
+        .tabbrowser-tab:hover .tab-rename-icon { opacity: 1; }
+        .tab-rename-icon:hover { transform: translateY(-50%) scale(1.2); }
         .tab-rename-loading {
             opacity: 0.5;
             cursor: wait;
-            animation: loading-pulse-animation 1s infinite;
+            animation: loading-pulse 1s infinite;
         }
         .tab-rename-inline:focus {
-            border-color: rgba(51, 153, 255, 0.8);
-            box-shadow: 0 0 4px rgba(51, 153, 255, 0.5);
-        }
-        `
+            border-color: #39f;
+            box-shadow: 0 0 4px rgba(51,153,255,0.5);
+        }`
     };
 
-    // Inject CSS for the renaming input and icon
-    function injectStyles() {
+    // Style injection with singleton pattern
+    const injectStyles = () => {
         if (document.getElementById('tab-rename-styles')) return;
-        const styleElement = document.createElement('style');
-        styleElement.id = 'tab-rename-styles';
-        styleElement.textContent = CONFIG.styles;
-        document.head.appendChild(styleElement);
-    }
+        const style = Object.assign(document.createElement('style'), {
+            id: 'tab-rename-styles',
+            textContent: CONFIG.styles
+        });
+        document.head.appendChild(style);
+    };
 
-    // AI-powered rename function using Ollama (optional)
-    async function renameWithAI(originalTitle) {
-        if (!originalTitle || originalTitle.trim().length === 0) {
-            return originalTitle;
-        }
+    // Enhanced title processing
+    const processTitle = (text) => {
+        return text.split(/\s+/)
+        .slice(0, 4)
+        .join(' ')
+        .substring(0, CONFIG.maxTitleLength)
+        .replace(/^["'\s]+|["'\s]+$/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .replace(/(?:^|\s)\W+/g, '')
+        .replace(/\b(a|an|the|and|of|in|on|at)\b/gi, (m) => m.toLowerCase());
+    };
+
+    // Professional API handler with optimized prompts
+    const renameWithAI = async (originalTitle) => {
+        if (!originalTitle?.trim()) return originalTitle;
+
+        const { ollama, customApi } = CONFIG.apiConfig;
+        const useOllama = ollama.enabled && !customApi.enabled ? true :
+        customApi.enabled ? false : ollama.enabled;
 
         try {
-            const response = await fetch(CONFIG.ollamaApiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model: "llama3.2:1b-instruct-q4_K_M",
-                    prompt: `Just shorten the following text to a concise clear 4-word version suitable for a tab name: ${originalTitle}`,
-                    temperature: 0.2,
-                    stream: false
-                })
-            });
+            const response = await fetch(
+                useOllama ? ollama.endpoint : customApi.endpoint,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(!useOllama && { 'Authorization': `Bearer ${customApi.apiKey}` })
+                    },
+                    body: JSON.stringify(useOllama ? {
+                        model: ollama.model,
+                        prompt: `Transform into 2-4 word tab title from: "${originalTitle}"\n- Remove platform names\n- Use title case\n- No special chars\n- Only respond with title`,
+                        temperature: 0.2,
+                        stream: false
+                    } : {
+                        model: customApi.model,
+                        messages: [{
+                            role: "system",
+                            content: "You are a professional tab title optimizer. Respond ONLY with the optimized title in title case."
+                        },{
+                            role: "user",
+                            content: `Transform into 2-4 word tab title:\n"${originalTitle}"\n- Remove dates/platforms\n- Prioritize keywords\n- Max ${CONFIG.maxTitleLength} chars\n- No explanations`
+                        }],
+                        temperature: 0.2,
+                        max_tokens: 25
+                    })
+                }
+            );
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
-            const result = await response.json();
-            let renamedTitle = result.response.trim()
-            .split(/\s+/)
-            .slice(0, 4)
-            .join(' ')
-            .substring(0, CONFIG.maxTitleLength);
+            const data = await response.json();
+            const aiText = useOllama ?
+            data.response?.trim() :
+            data.choices?.[0]?.message?.content?.trim();
 
-            // Remove leading and trailing quotes if they exist
-            renamedTitle = renamedTitle.replace(/^"|"$/g, '');
+            return aiText ? processTitle(aiText) : originalTitle;
 
-            return renamedTitle || originalTitle;
         } catch (error) {
             console.warn('AI Rename Error:', error);
             return originalTitle;
         }
-    }
+    };
 
-    // Create AI rename icon
-    function createRenameAIIcon(tab, labelElement) {
-        // Prevent multiple icons
-        if (tab.querySelector('.tab-rename-icon')) return;
+    // Icon management with event delegation
+    const handleIconInteraction = (tab, label) => {
+        const icon = Object.assign(document.createElement('div'), {
+            className: 'tab-rename-icon',
+            innerHTML: '✨',
+            onclick: async (e) => {
+                e.stopPropagation();
+                if (icon.classList.contains('tab-rename-loading')) return;
 
-        // Create rename icon
-        const icon = document.createElement('div');
-        icon.className = 'tab-rename-icon';
-        icon.innerHTML = '✨';
-
-        // Add click event to trigger AI rename
-        icon.addEventListener('click', async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Disable icon during AI processing
-            icon.classList.add('tab-rename-loading');
-
-            try {
-                const originalTitle = labelElement.textContent.trim();
-                const aiRename = await renameWithAI(originalTitle);
-
-                // Only update if the rename is different
-                if (aiRename !== originalTitle) {
-                    labelElement.textContent = aiRename;
-                }
-            } catch (error) {
-                console.warn('Rename attempt failed:', error);
-            } finally {
-                // Re-enable icon
+                icon.classList.add('tab-rename-loading');
+                const newTitle = await renameWithAI(label.textContent.trim());
+                if (newTitle !== label.textContent) label.textContent = newTitle;
                 icon.classList.remove('tab-rename-loading');
             }
         });
 
-        // Position the icon
         tab.style.position = 'relative';
         tab.appendChild(icon);
-    }
+    };
 
-    // Create manual rename input
-    function createRenameInput(tab, labelElement) {
-        const originalText = labelElement.textContent.trim();
+    // Dynamic input field creator
+    const createRenameField = (tab, label) => {
+        const input = Object.assign(document.createElement('input'), {
+            type: 'text',
+            className: 'tab-rename-inline',
+            value: label.textContent.trim(),
+                                    maxLength: CONFIG.maxTitleLength,
+                                    oninput: function() {
+                                        const width = Math.max(CONFIG.minInputWidth, this.value.length * 8);
+                                        this.style.width = `${width}px`;
+                                    },
+                                    onblur: function() {
+                                        label.textContent = this.value.trim() || label.textContent;
+                                        label.style.visibility = '';
+                                        this.remove();
+                                    },
+                                    onkeydown: function(e) {
+                                        if (e.key === 'Enter') this.blur();
+                                        if (e.key === 'Escape') {
+                                            label.style.visibility = '';
+                                            this.remove();
+                                        }
+                                    }
+        });
 
-        // Create and configure the input
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = originalText;
-        input.className = 'tab-rename-inline';
-        input.maxLength = CONFIG.maxTitleLength;
-
-        // Position input dynamically over the label without disrupting layout
-        const labelRect = labelElement.getBoundingClientRect();
-        input.style.width = `${Math.max(CONFIG.minInputWidth, labelRect.width)}px`;
-        input.style.height = `${labelRect.height}px`;
-
-        // Add input to the tab, overlaying the label
-        tab.style.position = 'relative';
+        label.style.visibility = 'hidden';
         tab.appendChild(input);
-        labelElement.style.visibility = 'hidden';
-
-        // Automatically focus and select text
         input.focus();
         input.select();
+    };
 
-        // Dynamically adjust input width
-        function adjustWidth() {
-            const tempSpan = document.createElement('span');
-            tempSpan.style.visibility = 'hidden';
-            tempSpan.style.position = 'absolute';
-            tempSpan.style.whiteSpace = 'nowrap';
-            tempSpan.style.font = getComputedStyle(input).font;
-            tempSpan.textContent = input.value || ' ';
-            document.body.appendChild(tempSpan);
-
-            const newWidth = Math.max(CONFIG.minInputWidth, tempSpan.offsetWidth + 10);
-            input.style.width = `${newWidth}px`;
-            tempSpan.remove();
-        }
-
-        input.addEventListener('input', adjustWidth);
-        adjustWidth();
-
-        // Save changes and restore the label
-        function saveRename() {
-            const newTitle = input.value.trim();
-            labelElement.textContent = newTitle || originalText;
-            labelElement.style.visibility = '';
-            input.remove();
-        }
-
-        // Handle cancel action
-        function cancelRename() {
-            labelElement.style.visibility = '';
-            input.remove();
-        }
-
-        // Input event listeners
-        input.addEventListener('blur', saveRename);
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                saveRename();
-            } else if (e.key === 'Escape') {
-                cancelRename();
-            }
-        });
-    }
-
-    // Function to attach renaming functionality to tabs
-    function addRenameListeners() {
-        const tabs = document.querySelectorAll('.tabbrowser-tab:not([data-has-rename]), tab:not([data-has-rename]), [role="tab"]:not([data-has-rename])');
-
-        tabs.forEach((tab) => {
-            const label = tab.querySelector('.tab-label, label, .tab-text');
-            const favicon = tab.querySelector('.tab-icon, .tab-icon-image');
-
-            // Skip tabs without a label or already processed tabs
+    // Tab observer with efficient mutation handling
+    const initTabObserver = () => {
+        const processTab = (tab) => {
+            if (tab.dataset.renameHandler) return;
+            const label = tab.querySelector('.tab-label, .tab-text');
             if (!label) return;
 
-            tab.setAttribute('data-has-rename', 'true');
-
+            tab.dataset.renameHandler = true;
             let hoverTimer;
-            let lastClickTime = 0;
 
-            // Add hover listener to show/create AI rename icon with delay
-            const handleMouseEnter = () => {
-                hoverTimer = setTimeout(() => {
-                    createRenameAIIcon(tab, label);
-                }, CONFIG.hoverDelay);
-            };
+            tab.addEventListener('mouseenter', () => {
+                hoverTimer = setTimeout(() => handleIconInteraction(tab, label), CONFIG.hoverDelay);
+            });
 
-            // Clear timer if mouse leaves before delay
-            const handleMouseLeave = () => {
-                clearTimeout(hoverTimer);
-            };
+            tab.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
 
-            tab.addEventListener('mouseenter', handleMouseEnter);
-            tab.addEventListener('mouseleave', handleMouseLeave);
-
-            // Manual rename on double-click
-            tab.addEventListener('click', (event) => {
-                // Prevent renaming on favicon clicks
-                if (event.target === favicon) return;
-
-                const currentTime = Date.now();
-                if (currentTime - lastClickTime < 300) {
-                    // Double-click detected
-                    event.preventDefault();
-                    event.stopPropagation();
-                    createRenameInput(tab, label);
+            tab.addEventListener('click', (e) => {
+                if (e.target.closest('.tab-icon-image')) return;
+                if (Date.now() - (tab.lastClick || 0) < 300) {
+                    e.stopPropagation();
+                    createRenameField(tab, label);
                 }
-                lastClickTime = currentTime;
+                tab.lastClick = Date.now();
+            });
+        };
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(({ addedNodes }) => {
+                addedNodes.forEach(node => {
+                    if (node.matches?.('.tabbrowser-tab, [role="tab"]')) processTab(node);
+                });
             });
         });
-    }
 
-    // Initialize the script
-    function init() {
-        // Prevent multiple initializations
-        if (document.body.getAttribute('data-tab-renamer-initialized')) return;
-
-        injectStyles();
-
-        addRenameListeners();
-
-        // Observe for new tabs
-        const tabContainer = document.getElementById('tabbrowser-tabs') ||
-        document.querySelector('.tabs-container') ||
-        document.querySelector('[role="tablist"]');
-
+        const tabContainer = document.querySelector('#tabbrowser-tabs, [role="tablist"]');
         if (tabContainer) {
-            const observer = new MutationObserver((mutations) => {
-                // Only process if there are actual tab changes
-                if (mutations.some(m => m.addedNodes.length > 0 || m.removedNodes.length > 0)) {
-                    addRenameListeners();
-                }
-            });
-
-            observer.observe(tabContainer, {
-                childList: true,
-                subtree: true
-            });
+            observer.observe(tabContainer, { childList: true, subtree: true });
+            [...tabContainer.querySelectorAll('.tabbrowser-tab, [role="tab"]')].forEach(processTab);
         }
+    };
 
-        document.body.setAttribute('data-tab-renamer-initialized', 'true');
-    }
+    // Initialization flow
+    const init = () => {
+        if (document.body.dataset.tabRenamer) return;
+        injectStyles();
+        initTabObserver();
+        document.body.dataset.tabRenamer = 'active';
+    };
 
-    // Run when DOM is ready
-    if (document.readyState === 'complete') {
-        init();
-    } else {
-        window.addEventListener('DOMContentLoaded', init);
-    }
+    document.readyState === 'complete' ? init() : window.addEventListener('DOMContentLoaded', init);
 })();
