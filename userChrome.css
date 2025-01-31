@@ -1,19 +1,69 @@
-/* boxy tab close button */
-.tab-close-button.close-icon {
-  border-radius: 6px !important;
+
+* {
+    font-family: "SF Pro Display" !important;
+    font-weight: 500 !important;
+}
+#tabbrowser-tabs {
+  & .tabbrowser-tab {
+    @media (-moz-bool-pref: "zen.tabs.dim-pending") {
+      &[pending="true"] {
+        opacity: 0.7;
+      }
+    }
+  }
 }
 
-.tab-background {
-  transition: background 0.15s ease-out !important;
+
+/* Other icons */
+#PanelUI-menu-button {
+  list-style-image: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="utf-8"%3F><!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:%23FFFFFF;}</style><path class="st0" d="M16,22.2c3.4,0,6.2-2.8,6.2-6.2c0-3.4-2.8-6.2-6.2-6.2c-3.4,0-6.2,2.8-6.2,6.2C9.8,19.4,12.6,22.2,16,22.2z M20.9,16c0,2.7-2.2,4.9-4.9,4.9s-4.9-2.2-4.9-4.9s2.2-4.9,4.9-4.9S20.9,13.3,20.9,16z"/><path class="st0" d="M26.7,16c0,5.9-4.8,10.7-10.7,10.7S5.3,21.9,5.3,16S10.1,5.3,16,5.3S26.7,10.1,26.7,16z M16,24.6c4.8,0,8.6-3.9,8.6-8.6S20.8,7.4,16,7.4S7.4,11.2,7.4,16S11.2,24.6,16,24.6z"/><path class="st0" d="M32,16c0,8.8-7.2,16-16,16S0,24.8,0,16S7.2,0,16,0S32,7.2,32,16z M16,29.1c7.3,0,13.1-5.9,13.1-13.1S23.3,2.9,16,2.9S2.9,8.7,2.9,16S8.7,29.1,16,29.1z"/></svg>') !important;
+  scale: 1.1;
+  filter: brightness(var(--icon-brightness)) !important;
 }
 
+#history-panelmenu {
+  list-style-image: url("/home/wysh/.zen/vhj1jevi.wysh3/chrome/icons/archive.svg") !important;
+  scale: 0.95;
+  filter: brightness(var(--icon-brightness)) !important;
+}
+#back-button {
+  list-style-image: url("/home/wysh/.zen/vhj1jevi.wysh3/chrome/icons/back.svg") !important;
+  scale: 1;
+  filter: brightness(var(--icon-brightness)) !important;
+}
 
+#forward-button {
+  list-style-image: url("/home/wysh/.zen/vhj1jevi.wysh3/chrome/icons/next.svg") !important;
+  scale: 1;
+  filter: brightness(var(--icon-brightness)) !important;
+}
 
+#reload-button {
+  list-style-image: url("/home/wysh/.zen/vhj1jevi.wysh3/chrome/icons/refresh.svg") !important;
+  scale: 1.1;
+  filter: brightness(var(--icon-brightness)) !important;
+}
 
+#unified-extensions-button {
+  list-style-image: url("/home/wysh/.zen/vhj1jevi.wysh3/chrome/icons/extensions.svg") !important;
+  scale: 1.2;
+  filter: brightness(var(--icon-brightness)) !important;
+}
 
+#new-tab-button {
+  list-style-image: url("/home/wysh/.zen/vhj1jevi.wysh3/chrome/icons/new_tab.svg") !important;
+  scale: 1;
+   filter: brightness(var(--icon-brightness)) !important;
+ }
 
+#downloads-button {
+  scale: 1.05;
+   filter: brightness(var(--icon-brightness)) !important;
+ }
 
-
+#zen-profile-button {
+  scale: 1.05;
+}
 
 
 
@@ -27,15 +77,21 @@
 #urlbar:is([breakout][breakout-extend], [breakout][usertyping][focused]):after {
    top: -6px !important
 }
-
+.urlbarView-body-inner {
+  #urlbar[open] > .urlbarView > .urlbarView-body-outer > & {
+    border-top: none !important;
+  }
+}
 .search-one-offs{display: none !important;}
 
 #urlbar[open] {
 top: calc(var(--zen-toolbar-height) * 3.3) !important;
 }
 #urlbar[breakout-extend="true"] > #urlbar-background {
-background: #7f7e7e !important;
-filter: brightness(69%) !important;
+background: rgba(10, 10, 10, 0.4) !important;
+backdrop-filter: blur(3rem) !important;
+border-radius: 16px !important;
+border-color: transparent !important;
 }
 
 
@@ -78,7 +134,7 @@ font-size: 20px !important;
 
 .urlbarView-url, .urlbarView-title-separator::before {
   font-weight: 500 !important;
-  color: #aaa !important;
+  color: rgba(215,215,215) !important;
 }
 
 .urlbarView-favicon {
@@ -136,35 +192,9 @@ font-size: 20px !important;
 
 
 
-/* Glassy tabs */
-.tab-background, #tabs-newtab-button {
-    transition: outline .5s fade-out,
-                box-shadow .6s fade-out;
-    #zen-essentials-container:has(&) .tab-background {
-        box-shadow: 0px 2px 0px 0px #FFFFFF0f, 
-                    0px 2px 8px 0px #00000040 !important;
-        outline: 1px solid #ffffff10 !important;
-        outline-offset: -1px !important;
-    }
-    &:hover, .tabbrowser-tab[selected]:has(&) .tab-background, .tab-stack:hover:has(&) .tab-background, #zen-essentials-container:has(&) .tabbrowser-tab:hover .tab-background {
-        box-shadow: 0px 2px 0px 0px #FFFFFF0f, 
-                    0px 2px 8px 0px #00000040,
-                    inset 0px 8px 8px 0px #FFFFFF07 !important;
-        outline: 1px solid #ffffff10 !important;
-        outline-offset: -1px !important;
-    }
-    *:has(&) { overflow: visible !important; }
-}
 
-/* url depth */
-#urlbar-background {
-    border: 1px solid #ffffff10 !important;
-    box-shadow: inset 0px 2px 0px 0px #00000020, inset 0px 2px 8px 0px #00000040 !important;
-}
-.urlbar-input {
-    color: #ffffffcc !important;
-    padding-left: 4px !important; 
-}
+
+
 
 
 
@@ -176,31 +206,6 @@ font-size: 20px !important;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* improve tabs acc to js */
-/* Style for pinned tabs with dynamically set favicon color */
-.tabbrowser-tab[pinned] .tab-background:not([selected], [multiselected]) {
-  opacity: 0.2;
-}
-.tabbrowser-tab[pinned] .tab-background:is([selected], [multiselected]) {
-  opacity: 0.5;
-}
-.tabbrowser-tab[pinned]:not([zen-essential="true"]) .tab-background:not([selected], [multiselected]) {
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
 
 
 
@@ -257,6 +262,21 @@ tab-group {
       background-size: contain !important;
       background-repeat: no-repeat !important;
     }
+    &>label::after {
+      content: "" !important;
+      position: absolute !important;
+      right: 6px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 18px !important;
+      height: 18px !important;
+      background-color: var(--sidebar-text-color);
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      mask-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdHJhbnNmb3JtPSJyb3RhdGUoMTgwKSI+PGcgZmlsbD0ibm9uZSIgaWQ9IlNWR1JlcG9fYmdaY2FycmllciIgc3Ryb2tlLXdpZHRoPSIwIj48L2c+PGcgZmlsbD0ibm9uZSIgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48L2c+PGcgZmlsbD0ibm9uZSIgaWQ9IlNWR1JlcG9faWNvbkNhcnJpZXIiPjxwYXRoIGQ9Ik01IDE1TDEwIDkuODQ5ODVDMTAuMjU2MyA5LjU3NjE2IDEwLjU2NiA5LjM1ODE0IDEwLjkxMDEgOS4yMDg5OEMxMS4yNTQxIDkuMDU5ODMgMTEuNjI1IDguOTgyOTEgMTIgOC45ODI5MUMxMi4zNzUgOC45ODI5MSAxMi43NDU5IDkuMDU5ODMgMTMuMDg5OSA5LjIwODk4QzEzLjQzNCA5LjM1ODE0IDEzLjc0MzcgOS41NzYxNiAxNCA5Ljg0OTg1TDE5IDE1IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L2c+PC9zdmc+');
+    }
   }
 
   &[collapsed] {
@@ -289,112 +309,14 @@ tab-group {
       background-size: contain !important;
       background-repeat: no-repeat !important;
     }
+    & .tab-group-label-container > label::after {
+      mask-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgaWQ9IlNWR1JlcG9fYmdaY2FycmllciIgc3Ryb2tlLXdpZHRoPSIwIj48L2c+PGcgZmlsbD0ibm9uZSIgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48L2c+PGcgZmlsbD0ibm9uZSIgaWQ9IlNWR1JlcG9faWNvbkNhcnJpZXIiPjxwYXRoIGQ9Ik01IDE1TDEwIDkuODQ5ODVDMTAuMjU2MyA5LjU3NjE2IDEwLjU2NiA5LjM1ODE0IDEwLjkxMDEgOS4yMDg5OEMxMS4yNTQxIDkuMDU5ODMgMTEuNjI1IDguOTgyOTEgMTIgOC45ODI5MUMxMi4zNzUgOC45ODI5MSAxMi43NDU5IDkuMDU5ODMgMTMuMDg5OSA5LjIwODk4QzEzLjQzNCA5LjM1ODE0IDEzLjc0MzcgOS41NzYxNiAxNCA5Ljg0OTg1TDE5IDE1IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L2c+PC9zdmc+'); 
+    }
   }
   & .tab-content {
     margin-left: 6px !important;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -469,21 +391,6 @@ border: 1px solid #ffffff0c !important;
 padding: 10px calc(4px + var(--tab-inline-padding)) !important;
 font-weight: 500 !important;
 }
-
-.tab-close-button {
-  padding: 5px !important;
-  border-radius: 20px !important;
-}
-
-
-.close-icon:hover {
-  background-color: color-mix(in srgb, currentColor 20%, transparent) !important;
-}
-
-
-
-
-
 
 
 
