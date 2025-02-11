@@ -1,0 +1,3 @@
+- Smart URL bar : auto-detects queries and selects the best search engine
+- Image bar : Add image support to url bar
+- Mini player : add arc / chrome style media player to the sidebar
