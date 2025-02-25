@@ -4,14 +4,14 @@
         apiConfig: {
             ollama: {
                 endpoint: 'http://localhost:11434/api/generate',
-                enabled: false, //set it to false if you want to prioritize custom api or do not want to use ollama
+                enabled: false, //set it to true if you want to use ollama
                 model: 'llama3.2:1b-instruct-q4_K_M' // edit if you want to use other models
             },
             customApi: {
-                endpoint: 'https://chatapi.akash.network/api/v1/chat/completions',  // Updated endpoint path
-                apiKey: 'sk-t0rOucWirdCUYxCnTfbvVw',
-                model: 'Meta-Llama-3-3-70B-Instruct',
-                enabled: true //set it to true if you want to use custom api
+                endpoint: 'BASE_URL/api/v1/chat/completions', //add base url
+                apiKey: 'API_KEY', //add api key
+                model: 'Meta-Llama-3-3-70B-Instruct', //change if you want to use other models (don't use the reasoning ones)
+                enabled: true //set it to false if you don't want to use custom api
             }
         },
         styles: `
