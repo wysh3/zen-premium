@@ -1,99 +1,40 @@
 (() => {
     const CONFIG = {
         maxTitleLength: 50,
-        minInputWidth: 320,
-        hoverDelay: 300,
         apiConfig: {
             ollama: {
                 endpoint: 'http://localhost:11434/api/generate',
-                enabled: true, //set it to false if you want to prioritize custom api or do not want to use ollama
+                enabled: false, //set it to false if you want to prioritize custom api or do not want to use ollama
                 model: 'llama3.2:1b-instruct-q4_K_M' // edit if you want to use other models
             },
             customApi: {
-                endpoint: 'API_URL',
-                apiKey: 'API_KEY',
-                model: 'API_MODEL_NAME',
-                enabled: false //set it to true if you want to use custom api
+                endpoint: 'https://chatapi.akash.network/api/v1/chat/completions',  // Updated endpoint path
+                apiKey: 'sk-t0rOucWirdCUYxCnTfbvVw',
+                model: 'Meta-Llama-3-3-70B-Instruct',
+                enabled: true //set it to true if you want to use custom api
             }
         },
         styles: `
-        @keyframes loading-pulse-animation {
+            @keyframes loading-pulse-animation {
                 0% {
-                    transform: translateY(-50%) scale(0.9);
                     opacity: 0.7;
                 }
                 50% {
-                    transform: translateY(-50%) scale(1.05);
                     opacity: 1;
                 }
                 100% {
-                    transform: translateY(-50%) scale(0.9);
                     opacity: 0.7;
                 }
             }
-
-            .tab-rename-icon {
-                position: absolute;
-                left: 2px;
-                top: 8px;
-                transform: translateY(-50%);
-                width: 16px;
-                height: 16px;
-                background: linear-gradient(135deg, rgba(51,153,255,0.9) 0%, rgba(51,153,255,0.7) 100%);
-                border-radius: 50%;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                opacity: 0;
-                transition: all 0.3s ease;
-                cursor: pointer;
-                z-index: 10;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 10px;
-            }
-
-            .tab-rename-inline {
-                position: absolute;
-                top: 50%;
-                left: 0;
-                transform: translateY(-50%);
-                background: transparent;
-                border: 1px solid rgba(128, 128, 128, 0.5);
-                border-radius: 4px;
-                padding: 2px 5px;
-                font-size: inherit;
-                color: inherit;
-                left: 30px;
-                outline: none;
-                box-shadow: none;
-                transition: all 0.2s ease-in-out;
-                z-index: 10;
-                min-width: 50px;
-                max-width: calc(100% - 74px);
-                width: auto;
-                white-space: nowrap;
-            }
-
-            .tabbrowser-tab:hover .tab-rename-icon {
-                opacity: 1;
-            }
-            .tab-rename-icon:hover {
-                transform: translateY(-50%) scale(1.2);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            }
-            .tab-rename-loading {
-                opacity: 0.5;
-                cursor: wait;
+            
+            .tab-rename-loading .tab-icon-image {
                 animation: loading-pulse-animation 1s infinite;
+                opacity: 0.7;
             }
-            .tab-rename-inline:focus {
-                border-color: rgba(51, 153, 255, 0.8);
-                box-shadow: 0 0 4px rgba(51, 153, 255, 0.5);
-            }`
+        `
     };
 
-    // Style injection with singleton pattern
+    // Style injection
     const injectStyles = () => {
         if (document.getElementById('tab-rename-styles')) return;
         const style = Object.assign(document.createElement('style'), {
@@ -103,170 +44,211 @@
         document.head.appendChild(style);
     };
 
-    // Enhanced title processing with markdown sanitization
+    // Process title to ensure it's clean and appropriate length
     const processTitle = (text) => {
         return text.split(/\s+/)
-        .slice(0, 4)
-        .join(' ')
-        .substring(0, CONFIG.maxTitleLength)
-        .replace(/^["'\s*]+|["'\s*]+$/g, '')
-        .replace(/\s{2,}/g, ' ')
-        .replace(/(?:^|\s)\W+/g, '')
-        .replace(/\*/g, '')
-        .replace(/\b(a|an|the|and|of|in|on|at)\b/gi, (m) => m.toLowerCase());
+            .slice(0, 4)
+            .join(' ')
+            .substring(0, CONFIG.maxTitleLength)
+            .replace(/^["'\s*]+|["'\s*]+$/g, '')
+            .replace(/\s{2,}/g, ' ')
+            .replace(/(?:^|\s)\W+/g, '')
+            .replace(/\*/g, '')
+            .replace(/\b(a|an|the|and|of|in|on|at)\b/gi, (m) => m.toLowerCase());
     };
 
-    // Professional API handler with sanitized prompts
-    const renameWithAI = async (originalTitle) => {
-        if (!originalTitle?.trim()) return originalTitle;
+    // Get page title from tab or URL
+    const getPageTitle = (tab) => {
+        // Try to get the page title
+        const originalTitle = tab.getAttribute('label') || 
+                             tab.querySelector('.tab-label, .tab-text')?.textContent || 
+                             'New Tab';
+        
+        // If it's a generic title, try to use URL
+        if (originalTitle === 'New Tab' || originalTitle === 'about:blank') {
+            try {
+                // Attempt to get the browser object to access the URL
+                const browser = tab.linkedBrowser || 
+                               tab._linkedBrowser || 
+                               gBrowser?.getBrowserForTab?.(tab);
+                
+                if (browser?.currentURI?.spec) {
+                    const url = browser.currentURI.spec;
+                    if (url && !url.startsWith('about:')) {
+                        try {
+                            const hostname = new URL(url).hostname;
+                            return hostname || originalTitle;
+                        } catch (e) {
+                            return originalTitle;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Error getting URL:', e);
+            }
+        }
+        
+        return originalTitle;
+    };
 
+    // AI rename function with better error handling
+    const renameWithAI = async (tab) => {
+        if (!tab) return;
+        
+        const originalTitle = getPageTitle(tab);
+        if (!originalTitle?.trim()) return;
+
+        console.log(`Renaming tab with title: "${originalTitle}"`);
+
+        // Mark tab as loading
+        tab.classList.add('tab-rename-loading');
+        
         const { ollama, customApi } = CONFIG.apiConfig;
         const useOllama = ollama.enabled && !customApi.enabled ? true :
-        customApi.enabled ? false : ollama.enabled;
+            customApi.enabled ? false : ollama.enabled;
 
         try {
-            const response = await fetch(
-                useOllama ? ollama.endpoint : customApi.endpoint,
+            const apiUrl = useOllama ? ollama.endpoint : customApi.endpoint;
+            console.log(`Using API: ${apiUrl}`);
+            
+            const requestBody = useOllama ? 
                 {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(!useOllama && { 'Authorization': `Bearer ${customApi.apiKey}` })
-                    },
-                    body: JSON.stringify(useOllama ? {
-                        model: ollama.model,
-                        prompt: `Transform the following text: "${originalTitle}"into 2-4 word tab title \n- Remove platform names/dates\n- Use title case\n- No markdown/asterisks\n- Respond ONLY with plain text title`,
-                        temperature: 0.2,
-                        stream: false
-                    } : {
-                        model: customApi.model,
-                        messages: [{
-                            role: "system",
-                            content: "You are a professional tab title optimizer. Respond ONLY with the optimized title in title case without any formatting."
-                        },{
-                            role: "user",
-                            content: `Transform the following text: "${originalTitle}"into 2-4 word tab title\n- Remove platform names\n- Prioritize keywords\n- Max ${CONFIG.maxTitleLength} chars\n- No explanations`
-                        }],
-                        temperature: 0.2,
-                        max_tokens: 25
-                    })
-                }
-            );
+                    model: ollama.model,
+                    prompt: `Transform the following text: "${originalTitle}" into 2-4 word tab title \n- Remove platform names/dates\n- Use title case\n- No markdown/asterisks\n- Respond ONLY with plain text title`,
+                    temperature: 0.2,
+                    stream: false
+                } : 
+                {
+                    model: customApi.model,
+                    messages: [{
+                        role: "system",
+                        content: "You are a professional tab title optimizer. Respond ONLY with the optimized title in title case without any formatting."
+                    },{
+                        role: "user",
+                        content: `Transform the following text: "${originalTitle}" into 2-4 word tab title\n- Remove platform names\n- Prioritize keywords\n- Max ${CONFIG.maxTitleLength} chars\n- No explanations`
+                    }],
+                    temperature: 0.2,
+                    max_tokens: 25
+                };
+            
+            console.log('Request payload:', JSON.stringify(requestBody));
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${customApi.apiKey}`
+                },
+                body: JSON.stringify(requestBody)
+            });
 
-            if (!response.ok) throw new Error(`API Error: ${response.status}`);
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => 'No error details');
+                throw new Error(`API Error: ${response.status} - ${errorText}`);
+            }
 
             const data = await response.json();
+            console.log('API response:', data);
+            
             const aiText = useOllama ?
-            data.response?.trim() :
-            data.choices?.[0]?.message?.content?.trim();
+                data.response?.trim() :
+                data.choices?.[0]?.message?.content?.trim();
 
-            return aiText ? processTitle(aiText) : originalTitle;
+            if (!aiText) {
+                throw new Error('No valid response from API');
+            }
+
+            const newTitle = processTitle(aiText);
+            console.log(`New title: "${newTitle}"`);
+            
+            // Update tab label
+            const label = tab.querySelector('.tab-label, .tab-text');
+            if (label && newTitle !== label.textContent) {
+                label.textContent = newTitle;
+            }
 
         } catch (error) {
-            console.warn('AI Rename Error:', error);
-            return originalTitle;
+            console.error('AI Rename Error:', error);
+        } finally {
+            // Remove loading state
+            tab.classList.remove('tab-rename-loading');
         }
     };
 
-    // Icon management with event delegation
-    const handleIconInteraction = (tab, label) => {
-        const icon = Object.assign(document.createElement('div'), {
-            className: 'tab-rename-icon',
-            innerHTML: '✨',
-            onclick: async (e) => {
-                e.stopPropagation();
-                if (icon.classList.contains('tab-rename-loading')) return;
-
-                icon.classList.add('tab-rename-loading');
-                const newTitle = await renameWithAI(label.textContent.trim());
-                if (newTitle !== label.textContent) label.textContent = newTitle;
-                icon.classList.remove('tab-rename-loading');
-            }
-        });
-
-        tab.style.position = 'relative';
-        tab.appendChild(icon);
-    };
-
-    // Dynamic input field creator
-    const createRenameField = (tab, label) => {
-        const input = Object.assign(document.createElement('input'), {
-            type: 'text',
-            className: 'tab-rename-inline',
-            value: label.textContent.trim(),
-                                    maxLength: CONFIG.maxTitleLength,
-                                    oninput: function() {
-                                        const width = Math.max(CONFIG.minInputWidth, this.value.length * 8);
-                                        this.style.width = `${width}px`;
-                                    },
-                                    onblur: function() {
-                                        label.textContent = this.value.trim() || label.textContent;
-                                        label.style.visibility = '';
-                                        this.remove();
-                                    },
-                                    onkeydown: function(e) {
-                                        if (e.key === 'Enter') this.blur();
-                                        if (e.key === 'Escape') {
-                                            label.style.visibility = '';
-                                            this.remove();
-                                        }
-                                    }
-        });
-
-        label.style.visibility = 'hidden';
-        tab.appendChild(input);
-        input.focus();
-        input.select();
-    };
-
-    // Tab observer with efficient mutation handling
-    const initTabObserver = () => {
-        const processTab = (tab) => {
-            if (tab.dataset.renameHandler) return;
-            const label = tab.querySelector('.tab-label, .tab-text');
-            if (!label) return;
-
-            tab.dataset.renameHandler = true;
-            let hoverTimer;
-
-            tab.addEventListener('mouseenter', () => {
-                hoverTimer = setTimeout(() => handleIconInteraction(tab, label), CONFIG.hoverDelay);
-            });
-
-            tab.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
-
-            tab.addEventListener('click', (e) => {
-                if (e.target.closest('.tab-icon-image')) return;
-                if (Date.now() - (tab.lastClick || 0) < 300) {
-                    e.stopPropagation();
-                    createRenameField(tab, label);
+    // Watch for tab pinning with enhanced detection
+    const watchTabPinning = () => {
+        // For standard Firefox tab pin changes
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.type === 'attributes' && 
+                    (mutation.attributeName === 'pinned' || 
+                     mutation.attributeName === 'zen-pin-id' ||
+                     mutation.attributeName === 'zen-pinned-changed' ||
+                     mutation.attributeName === 'aria-pinned')) {
+                    
+                    const tab = mutation.target;
+                    const isPinned = tab.hasAttribute('pinned') || 
+                                    tab.hasAttribute('zen-pin-id') ||
+                                    tab.getAttribute('aria-pinned') === 'true' ||
+                                    tab.hasAttribute('zen-pinned-changed');
+                    
+                    // Only rename when a tab is newly pinned
+                    if (isPinned && !tab.dataset.wasPinned) {
+                        console.log('Tab pinned:', tab.getAttribute('label'));
+                        tab.dataset.wasPinned = 'true';
+                        // Small delay to ensure the tab is fully pinned
+                        setTimeout(() => renameWithAI(tab), 100);
+                    } else if (!isPinned) {
+                        // Reset the tracking when unpinned
+                        tab.dataset.wasPinned = '';
+                    }
                 }
-                tab.lastClick = Date.now();
-            });
-        };
-
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach(({ addedNodes }) => {
-                addedNodes.forEach(node => {
-                    if (node.matches?.('.tabbrowser-tab, [role="tab"]')) processTab(node);
-                });
             });
         });
 
+        // Observe all tabs for pin attribute changes
         const tabContainer = document.querySelector('#tabbrowser-tabs, [role="tablist"]');
         if (tabContainer) {
-            observer.observe(tabContainer, { childList: true, subtree: true });
-            [...tabContainer.querySelectorAll('.tabbrowser-tab, [role="tab"]')].forEach(processTab);
+            observer.observe(tabContainer, { 
+                childList: true, 
+                subtree: true, 
+                attributes: true,
+                attributeFilter: ['pinned', 'zen-pin-id', 'zen-pinned-changed', 'aria-pinned'] 
+            });
+            
+            // Process any already pinned tabs
+            tabContainer.querySelectorAll('.tabbrowser-tab[pinned], [zen-pin-id], [aria-pinned="true"]').forEach(tab => {
+                if (!tab.dataset.wasPinned) {
+                    tab.dataset.wasPinned = 'true';
+                    renameWithAI(tab);
+                }
+            });
         }
+
+        // For Zen Browser special pin events
+        window.addEventListener('zen-tab-pinned', event => {
+            const tab = event.target;
+            if (tab && !tab.dataset.wasPinned) {
+                console.log('Zen tab pinned event:', tab.getAttribute('label'));
+                tab.dataset.wasPinned = 'true';
+                setTimeout(() => renameWithAI(tab), 100);
+            }
+        });
     };
 
-    // Initialization flow
+    // Initialization
     const init = () => {
-        if (document.body.dataset.tabRenamer) return;
+        if (document.body.dataset.autoTabRenamer) return;
         injectStyles();
-        initTabObserver();
-        document.body.dataset.tabRenamer = 'active';
+        watchTabPinning();
+        document.body.dataset.autoTabRenamer = 'active';
+        console.log("Auto Tab Rename on Pin initialized");
     };
 
-    document.readyState === 'complete' ? init() : window.addEventListener('DOMContentLoaded', init);
+    // Wait for the browser UI to be fully loaded
+    if (document.readyState === 'complete') {
+        setTimeout(init, 1000); // Delay to ensure browser UI is fully loaded
+    } else {
+        window.addEventListener('load', () => setTimeout(init, 1000));
+    }
 })();
