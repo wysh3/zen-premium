@@ -15,21 +15,60 @@
             }
         },
         styles: `
+            /* High-performance animations using transform and opacity */
             @keyframes loading-pulse-animation {
-                0% {
+                0%, 100% {
                     opacity: 0.7;
+                    filter: brightness(0.95);
                 }
                 50% {
                     opacity: 1;
-                }
-                100% {
-                    opacity: 0.7;
+                    filter: brightness(1.05);
                 }
             }
             
             .tab-rename-loading .tab-icon-image {
-                animation: loading-pulse-animation 1s infinite;
-                opacity: 0.7;
+                animation: loading-pulse-animation 1.2s cubic-bezier(0.33, 0, 0.67, 1) infinite;
+                will-change: opacity, filter;
+            }
+            
+            /* Ultra-smooth tab name change animation - Apple-inspired */
+            @keyframes tab-name-fade-out {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                    filter: blur(0px);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(3px) scale(0.98);
+                    filter: blur(0.5px);
+                }
+            }
+            
+            @keyframes tab-name-fade-in {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-3px) scale(0.98);
+                    filter: blur(0.5px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                    filter: blur(0px);
+                }
+            }
+            
+            .tab-name-changing-out .tab-label,
+            .tab-name-changing-out .tab-text {
+                animation: tab-name-fade-out 0.18s cubic-bezier(0.33, 0, 0.67, 1) forwards;
+                will-change: transform, opacity, filter;
+            }
+            
+            .tab-name-changing-in .tab-label,
+            .tab-name-changing-in .tab-text {
+                animation: tab-name-fade-in 0.24s cubic-bezier(0.33, 0, 0.67, 1) forwards;
+                will-change: transform, opacity, filter;
             }
         `
     };
@@ -50,7 +89,7 @@
             .slice(0, 4)
             .join(' ')
             .substring(0, CONFIG.maxTitleLength)
-            .replace(/^["'\s*]+|["'\s*]+$/g, '')
+            .replace(/^["'\s]+|["'\s]+$/g, '')
             .replace(/\s{2,}/g, ' ')
             .replace(/(?:^|\s)\W+/g, '')
             .replace(/\*/g, '')
@@ -89,6 +128,27 @@
         }
         
         return originalTitle;
+    };
+
+    // Smooth tab title update with two-phase animation
+    const smoothlyUpdateTabTitle = (tab, label, newTitle) => {
+        // Phase 1: Fade out the current title
+        tab.classList.add('tab-name-changing-out');
+        
+        // Wait for fade-out to complete, then update text and fade in
+        setTimeout(() => {
+            // Update the text while it's invisible
+            label.textContent = newTitle;
+            
+            // Remove fade-out class and add fade-in class
+            tab.classList.remove('tab-name-changing-out');
+            tab.classList.add('tab-name-changing-in');
+            
+            // Remove the fade-in class once animation completes
+            setTimeout(() => {
+                tab.classList.remove('tab-name-changing-in');
+            }, 240); // Match fade-in animation duration
+        }, 180); // Match fade-out animation duration
     };
 
     // AI rename function with better error handling
@@ -133,12 +193,18 @@
             
             console.log('Request payload:', JSON.stringify(requestBody));
             
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            // Only add Authorization header if using custom API and API key exists
+            if (!useOllama && customApi.apiKey) {
+                headers['Authorization'] = `Bearer ${customApi.apiKey}`;
+            }
+            
             const response = await fetch(apiUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${customApi.apiKey}`
-                },
+                headers: headers,
                 body: JSON.stringify(requestBody)
             });
 
@@ -161,17 +227,19 @@
             const newTitle = processTitle(aiText);
             console.log(`New title: "${newTitle}"`);
             
-            // Update tab label
+            // Update tab label with smooth animation
             const label = tab.querySelector('.tab-label, .tab-text');
             if (label && newTitle !== label.textContent) {
-                label.textContent = newTitle;
+                smoothlyUpdateTabTitle(tab, label, newTitle);
             }
 
         } catch (error) {
             console.error('AI Rename Error:', error);
         } finally {
-            // Remove loading state
-            tab.classList.remove('tab-rename-loading');
+            // Remove loading state after a slight delay to ensure animations complete
+            setTimeout(() => {
+                tab.classList.remove('tab-rename-loading');
+            }, 200);
         }
     };
 
